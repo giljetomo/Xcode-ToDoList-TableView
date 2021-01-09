@@ -26,6 +26,13 @@ class ToDoTableViewCell: UITableViewCell {
         return lb
     }()
     
+//    let editButton: UIButton = {
+//        let eb = UIButton(type: .detailDisclosure)
+//        eb.constraintHeight(equalToConstant: 50)
+//        eb.translatesAutoresizingMaskIntoConstraints = false
+//        return eb
+//    }()
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         

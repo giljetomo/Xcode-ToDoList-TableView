@@ -22,6 +22,7 @@ class ToDoTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.tableView = UITableView(frame: self.tableView.frame, style: .insetGrouped)
+        tableView.allowsMultipleSelectionDuringEditing = true
         tableView.register(ToDoTableViewCell.self, forCellReuseIdentifier: cellId)
         
         //Navigation Controller properties
@@ -66,13 +67,19 @@ class ToDoTableViewController: UITableViewController {
 
         let todo = toDoList[indexPath.section].toDos[indexPath.row]
         let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as! ToDoTableViewCell
-        
+        cell.accessoryType = .detailDisclosureButton
         cell.update(with: todo)
-        cell.showsReorderControl = true
+      
+        //  cell.showsReorderControl = true
         return cell
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        guard tableView.isEditing == false else { return }
+        
+        tableView.deselectRow(at: indexPath, animated: true)
+        
         toDoList[indexPath.section].toDos[indexPath.row].isCompleted.toggle()
         
         print(toDoList[indexPath.section].toDos[indexPath.row].todoDescription!, toDoList[indexPath.section].toDos[indexPath.row].priority)
@@ -95,6 +102,7 @@ class ToDoTableViewController: UITableViewController {
     
         //insert the modified todo item to the destination to update the 'model'
         toDoList[destinationIndexPath.section].toDos.insert(selected, at: destinationIndexPath.row)
-
     }
+    
+    
 }
