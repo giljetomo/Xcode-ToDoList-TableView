@@ -104,5 +104,9 @@ class ToDoTableViewController: UITableViewController {
         toDoList[destinationIndexPath.section].toDos.insert(selected, at: destinationIndexPath.row)
     }
     
+    override func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
+        let a = toDoList[indexPath.section].toDos[indexPath.row]
+        print(a.title, a.todoDescription)
+    }
     
 }
