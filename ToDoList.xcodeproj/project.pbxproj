@@ -16,6 +16,7 @@
 		526B348D25A8D89700BAE8D9 /* ToDoTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 526B348C25A8D89700BAE8D9 /* ToDoTableViewCell.swift */; };
 		526B349125A8D93500BAE8D9 /* ToDoTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 526B349025A8D93500BAE8D9 /* ToDoTableViewController.swift */; };
 		526B34AD25A8E00400BAE8D9 /* UIView+ConstraintLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 526B34AC25A8E00400BAE8D9 /* UIView+ConstraintLayout.swift */; };
+		526B34BA25AA27D000BAE8D9 /* AddViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 526B34B925AA27D000BAE8D9 /* AddViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,6 +31,7 @@
 		526B348C25A8D89700BAE8D9 /* ToDoTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoTableViewCell.swift; sourceTree = "<group>"; };
 		526B349025A8D93500BAE8D9 /* ToDoTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoTableViewController.swift; sourceTree = "<group>"; };
 		526B34AC25A8E00400BAE8D9 /* UIView+ConstraintLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+ConstraintLayout.swift"; sourceTree = "<group>"; };
+		526B34B925AA27D000BAE8D9 /* AddViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -72,6 +74,7 @@
 				526B348925A8D87900BAE8D9 /* ToDo.swift */,
 				526B348C25A8D89700BAE8D9 /* ToDoTableViewCell.swift */,
 				526B349025A8D93500BAE8D9 /* ToDoTableViewController.swift */,
+				526B34B925AA27D000BAE8D9 /* AddViewController.swift */,
 			);
 			path = ToDoList;
 			sourceTree = "<group>";
@@ -148,6 +151,7 @@
 			files = (
 				526B347525A8D86500BAE8D9 /* AppDelegate.swift in Sources */,
 				526B347725A8D86500BAE8D9 /* SceneDelegate.swift in Sources */,
+				526B34BA25AA27D000BAE8D9 /* AddViewController.swift in Sources */,
 				526B348A25A8D87900BAE8D9 /* ToDo.swift in Sources */,
 				526B34AD25A8E00400BAE8D9 /* UIView+ConstraintLayout.swift in Sources */,
 				526B348D25A8D89700BAE8D9 /* ToDoTableViewCell.swift in Sources */,

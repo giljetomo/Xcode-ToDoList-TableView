@@ -28,10 +28,19 @@ class ToDoTableViewController: UITableViewController {
         //Navigation Controller properties
         title = "Todo Items"
         navigationController?.navigationBar.prefersLargeTitles = true
-        let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: nil)
-        let deleteButton = UIBarButtonItem(title: "Delete", style: .plain, target: self, action: nil)
+        let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addItem))
+        let deleteButton = UIBarButtonItem(title: "Delete", style: .plain, target: self, action: #selector(deleteItem))
         navigationItem.rightBarButtonItems = [addButton, deleteButton]
         navigationItem.leftBarButtonItem = editButtonItem
+    }
+    
+    @objc func deleteItem() {
+        
+    }
+    
+    @objc func addItem() {
+      let addVC = AddViewController()
+        navigationController?.pushViewController(addVC, animated: true)
     }
     
     override func numberOfSections(in tableView: UITableView) -> Int {
