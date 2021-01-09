@@ -7,6 +7,11 @@
 
 import Foundation
 
+struct Category {
+    var group: Priority
+    var toDos: [ToDo]
+}
+
 struct ToDo {
     var title: String
     var todoDescription: String?

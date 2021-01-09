@@ -43,7 +43,7 @@ class ToDoTableViewCell: UITableViewCell {
         hStackView.spacing = 8
         
         contentView.addSubview(hStackView)
-        hStackView.matchParent(padding: .init(top: 8, left: 16, bottom: 8, right: 16))
+        hStackView.matchParent(padding: .init(top: 5, left: 5, bottom: 5, right: 8))
 
     }
     required init?(coder: NSCoder) {
@@ -53,6 +53,6 @@ class ToDoTableViewCell: UITableViewCell {
     func update(with todo: ToDo) {
       titleLabel.text = todo.title
       todoDescriptionLabel.text = todo.todoDescription
-      isCompletedLabel.text = todo.isCompleted ? "✔" : ""
+      isCompletedLabel.text = todo.isCompleted ? "☑️" : ""
     }
 }
