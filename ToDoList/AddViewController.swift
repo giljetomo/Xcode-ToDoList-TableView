@@ -25,6 +25,15 @@ class AddViewController: UIViewController {
         return tf
     }()
     
+    let newToDoItemDescription: UITextField = {
+       let tf = UITextField()
+        tf.borderStyle = .roundedRect
+        tf.placeholder = "Details"
+        tf.font = .systemFont(ofSize: 18)
+        tf.translatesAutoresizingMaskIntoConstraints = false
+        return tf
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
@@ -51,14 +60,29 @@ class AddViewController: UIViewController {
         mainView.heightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.heightAnchor, multiplier: 1).isActive = true
         mainView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 0).isActive = true
         
-        mainView.addSubview(newToDoItem)
+        newToDoItem.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        newToDoItem.widthAnchor.constraint(lessThanOrEqualToConstant: 600).isActive = true
+        newToDoItem.widthAnchor.constraint(greaterThanOrEqualToConstant: 400).isActive = true
         
-        //added constraints so that the text field will not stretch out too much in iPad
-        newToDoItem.heightAnchor.constraint(equalToConstant: 50).isActive = true
-        newToDoItem.widthAnchor.constraint(lessThanOrEqualTo: mainView.widthAnchor, multiplier: 0.95).isActive = true
-        newToDoItem.widthAnchor.constraint(greaterThanOrEqualToConstant: 600).isActive = true
-        newToDoItem.topAnchor.constraint(equalTo: mainView.topAnchor, constant: 10).isActive = true
-        newToDoItem.centerXAnchor.constraint(equalTo: mainView.centerXAnchor).isActive = true
+        newToDoItemDescription.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        newToDoItemDescription.widthAnchor.constraint(lessThanOrEqualToConstant: 600).isActive = true
+        newToDoItemDescription.widthAnchor.constraint(greaterThanOrEqualToConstant: 400).isActive = true
+        
+        let vStackView = UIStackView(arrangedSubviews: [newToDoItem, newToDoItemDescription])
+        vStackView.translatesAutoresizingMaskIntoConstraints = false
+        vStackView.alignment = .center
+        vStackView.distribution = .equalSpacing
+        vStackView.spacing = 8
+        vStackView.axis = .vertical
+        
+        mainView.addSubview(vStackView)
+        
+        vStackView.widthAnchor.constraint(lessThanOrEqualTo: mainView.widthAnchor, multiplier: 0.95).isActive = true
+        vStackView.widthAnchor.constraint(greaterThanOrEqualToConstant: 600).isActive = true
+        vStackView.topAnchor.constraint(equalTo: mainView.topAnchor, constant: 10).isActive = true
+        vStackView.centerXAnchor.constraint(equalTo: mainView.centerXAnchor).isActive = true
+    
+       
 
     }
 
