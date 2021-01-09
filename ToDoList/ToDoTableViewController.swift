@@ -12,12 +12,15 @@ class ToDoTableViewController: UITableViewController {
     let cellId = "ToDo"
     
     var toDoList: [[ToDo]] = [
-        [ToDo(title: "House chore", todoDescription: "Wash the dishes", priority: 1, isCompleted: false)],
-        [ToDo(title: "Exercise", todoDescription: "Walk", priority: 2, isCompleted: true)],
-        [ToDo(title: "House chore", todoDescription: "Do the laundry", priority: 3, isCompleted: false)]
+        [ToDo(title: "House chore", todoDescription: "Wash the dishes", priority: .high, isCompleted: false)],
+        
+        [ToDo(title: "Exercise", todoDescription: "Walk", priority: .medium, isCompleted: true)],
+        
+        [ToDo(title: "House chore", todoDescription: "Do the laundry", priority: .low, isCompleted: false),
+         ToDo(title: "House chore", todoDescription: "Do the laundry", priority: .low, isCompleted: false)]
     ]
     
-    var sectionTitles: [String] = ["High Priority", "Medium Priority", "Low Priority"]
+    //var sectionTitles: [String] = ["High Priority", "Medium Priority", "Low Priority"]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -31,11 +34,16 @@ class ToDoTableViewController: UITableViewController {
     }
     
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return sectionTitles.count
+        return 3
     }
     
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return sectionTitles[section]
+        switch section {
+        case 0: return Priority.high.rawValue
+        case 1: return Priority.medium.rawValue
+        case 2: return Priority.low.rawValue
+        default: fatalError()
+        }
     }
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return toDoList[section].count
