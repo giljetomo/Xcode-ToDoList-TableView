@@ -169,7 +169,14 @@ class ToDoTableViewController: UITableViewController, addViewControllerDelegate 
         }
     }
     override func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
-       // setEditing(true, animated: false)
+       
+        //if a cell has been deselected, selectedRows need to be updated
+        if let selectedRows = tableView.indexPathsForSelectedRows {
+            //get the [IndexPath] of all selected rows during edit mode
+            self.selectedRows = selectedRows
+        }
+        
+        // setEditing(true, animated: false)
         reloadNCBarButtonItems(false)
     }
     
