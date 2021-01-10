@@ -67,9 +67,14 @@ class ToDoTableViewController: UITableViewController, addViewControllerDelegate,
     }
     
     func add(_ todo: ToDo) {
+        
+//        for group in toDoList {
+//            if group.toDos.contains(todo) { print ("t")}
+//        }
+        
         toDoList[1].toDos.append(todo)
         tableView.insertRows(at: [IndexPath(row: toDoList[1].toDos.count-1, section: 1)], with: .automatic)
-        
+
         reloadNCBarButtonItems(toDoListIsEmpty)
     }
     
@@ -111,6 +116,7 @@ class ToDoTableViewController: UITableViewController, addViewControllerDelegate,
     
     @objc func addItem() {
       let addVC = AddViewController()
+        addVC.toDoList = toDoList
         addVC.delegate = self
         navigationController?.pushViewController(addVC, animated: true)
     }
@@ -213,6 +219,7 @@ class ToDoTableViewController: UITableViewController, addViewControllerDelegate,
         itemForEditIndexPath = indexPath
         let editVC = EditViewController()
         editVC.toDo = toDoItem
+        
         editVC.delegate = self
         navigationController?.pushViewController(editVC, animated: true)
     }

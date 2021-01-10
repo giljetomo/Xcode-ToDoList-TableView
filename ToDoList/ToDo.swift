@@ -19,7 +19,8 @@ struct ToDo: Equatable {
     var isCompleted: Bool
     
     static func == (lhs: ToDo, rhs: ToDo) -> Bool {
-        return lhs.title == rhs.title
+        return lhs.title == rhs.title &&
+               lhs.todoDescription == rhs.todoDescription
     }
 }
 

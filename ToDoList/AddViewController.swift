@@ -15,7 +15,12 @@ class AddViewController: UIViewController {
 
     lazy var saveButton = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(saveItem))
     weak var delegate: addViewControllerDelegate?
-
+    
+    //this list will be populated with all existing toDo items once this UIViewController has been created from ToDoTableViewController
+    var toDoList: [Category]?
+    
+    //this will hold the new toDo item to be added
+    var newToDo: ToDo?
     
     let mainView: UIView = {
         let view = UIView()
@@ -55,6 +60,7 @@ class AddViewController: UIViewController {
         setupLayout()
         
         newToDoItem.addTarget(self, action: #selector(textEditingChanged(_:)), for: .editingChanged)
+        newToDoItemDescription.addTarget(self, action: #selector(textEditingChanged(_:)), for: .editingChanged)
         newToDoItem.becomeFirstResponder()
         updateSaveButtonState()
     }
@@ -66,6 +72,27 @@ class AddViewController: UIViewController {
     func updateSaveButtonState() {
         let newToDoItemText = newToDoItem.text ?? ""
         saveButton.isEnabled = !newToDoItemText.isEmpty
+        
+        //Save button will be disabled if the toDo item being added already exists
+        guard let title = newToDoItem.text, title != "" else { return }
+        //if guard passes, create a newToDo item
+        newToDo = ToDo(title: newToDoItem.text!, todoDescription: newToDoItemDescription.text, priority: .medium, isCompleted: false)
+        //if toDoList from ToDoTableViewController is not empty, iterate through toDo items from the list
+        if let groupList = toDoList {
+            var isEnabled = true
+            //iterate through every group of toDo items, ie. High, Medium, Low
+            loop: for group in groupList {
+                //unwrap the newTodo item then compare it with the toDo items and disable the button if there's a match
+                if let newTodo = newToDo {
+                    if group.toDos.contains(newTodo) {
+                        isEnabled = false
+                        //if there's match, no need to read other group's list of toDo items
+                        break loop
+                    }
+                }
+            }
+            saveButton.isEnabled = isEnabled
+        }
     }
     
     @objc func dismissVC() {
@@ -73,8 +100,8 @@ class AddViewController: UIViewController {
     }
     
     @objc func saveItem() {
-        let newToDo = ToDo(title: newToDoItem.text!, todoDescription: newToDoItemDescription.text, priority: .medium, isCompleted: false)
-        delegate?.add(newToDo)
+        newToDo = ToDo(title: newToDoItem.text!, todoDescription: newToDoItemDescription.text, priority: .medium, isCompleted: false)
+        delegate?.add(newToDo!)
         navigationController?.popToRootViewController(animated: true)
     }
     
