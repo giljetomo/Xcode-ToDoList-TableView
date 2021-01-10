@@ -15,6 +15,7 @@ class EditViewController: UIViewController {
 
     var toDo: ToDo?
     var delegate: EditVCDelegate?
+    var toDoList: [Category]?
     
     let saveButton = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(saveItem))
     
@@ -58,6 +59,7 @@ class EditViewController: UIViewController {
         toDoItemTextField.becomeFirstResponder()
         
         toDoItemTextField.addTarget(self, action: #selector(textEditingChanged(_:)), for: .editingChanged)
+        toDoItemDetailsTextField.addTarget(self, action: #selector(textEditingChanged(_:)), for: .editingChanged)
     
         setupLayout()
     }
@@ -69,6 +71,28 @@ class EditViewController: UIViewController {
     func updateSaveButtonState() {
         let toDoItem = toDoItemTextField.text ?? ""
         saveButton.isEnabled = !toDoItem.isEmpty
+        
+        //Save button will be disabled if the toDo item being added already exists
+        guard let title = toDoItemTextField.text, title != "" else { return }
+        //if guard passes, create a toDo item
+        toDo = ToDo(title: toDoItemTextField.text!, todoDescription: toDoItemDetailsTextField.text, priority: .medium, isCompleted: false)
+        
+        //if toDoList from ToDoTableViewController is not empty, iterate through toDo items from the list
+        if let groupList = toDoList {
+            var isEnabled = true
+            //iterate through every group of toDo items, ie. High, Medium, Low
+            loop: for group in groupList {
+                //unwrap the newTodo item then compare it with the toDo items and disable the button if there's a match
+                if let currentToDo = toDo {
+                    if group.toDos.contains(currentToDo) {
+                        isEnabled = false
+                        //if there's match, no need to read other group's list of toDo items
+                        break loop
+                    }
+                }
+            }
+            saveButton.isEnabled = isEnabled
+        }
     }
     
     @objc func saveItem() {
