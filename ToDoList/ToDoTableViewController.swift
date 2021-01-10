@@ -2,7 +2,7 @@
 //  ToDoTableViewController.swift
 //  ToDoList
 //
-//  Created by Macbook Pro on 2021-01-08.
+//  Created by Gil Jetomo on 2021-01-08.
 //
 
 import UIKit
@@ -20,6 +20,8 @@ class ToDoTableViewController: UITableViewController, addViewControllerDelegate 
         
         Category(group: .low, toDos: [ToDo(title: "House chore", todoDescription: "Do the laundry", priority: .low, isCompleted: true), ToDo(title: "Grooming", todoDescription: "Get a haircut", priority: .low, isCompleted: true)])
     ]
+    var deleteButton: UIBarButtonItem!
+    var addButton: UIBarButtonItem!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,10 +32,23 @@ class ToDoTableViewController: UITableViewController, addViewControllerDelegate 
         //Navigation Controller properties
         title = "Todo Items"
         navigationController?.navigationBar.prefersLargeTitles = true
-        let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addItem))
-        let deleteButton = UIBarButtonItem(title: "Delete", style: .plain, target: self, action: #selector(deleteItem))
-        navigationItem.rightBarButtonItems = [addButton, deleteButton]
+        addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addItem))
+        deleteButton = UIBarButtonItem(title: "Delete", style: .plain, target: self, action: #selector(deleteItem))
         navigationItem.leftBarButtonItem = editButtonItem
+        
+        setEditing(false, animated: false)
+    }
+    
+    override func setEditing(_ editing: Bool, animated: Bool) {
+        //this is the default setting in order to enter editing mode
+        super.setEditing(editing, animated: animated)
+
+        //define the rightBarButtonItems depending on the conditions
+        if (self.isEditing && tableView.indexPathsForSelectedRows != nil) {
+            navigationItem.rightBarButtonItems = [addButton, deleteButton]
+        } else {
+            navigationItem.rightBarButtonItems = [addButton]
+        }
     }
     
     func add(_ todo: ToDo) {
@@ -63,14 +78,6 @@ class ToDoTableViewController: UITableViewController, addViewControllerDelegate 
                 //reload the tableView on the specific section where the toDo item was previously located
                 tableView.reloadSections([indexPath.section], with: .automatic)
             }
-
-//            for b in toDoList {
-//                for c in b.toDos {
-//                    print(c.todoDescription, c.priority)
-//                }
-//            }
-//            print("END")
-//
         }
     }
     
@@ -78,12 +85,6 @@ class ToDoTableViewController: UITableViewController, addViewControllerDelegate 
       let addVC = AddViewController()
         addVC.delegate = self
         navigationController?.pushViewController(addVC, animated: true)
-//
-//        let addEditTVC = AddEditEmojiTableViewController(style: .grouped)
-//        addEditTVC.delegate = self
-//        addEditTVC.emoji = emojis[indexPath.row]
-//        let addEditNC = UINavigationController(rootViewController: addEditTVC)
-//        present(addEditNC, animated: true, completion: nil)
     }
     
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -142,8 +143,12 @@ class ToDoTableViewController: UITableViewController, addViewControllerDelegate 
             if let selectedRows = tableView.indexPathsForSelectedRows {
                 //get the [IndexPath] of all selected rows during edit mode
                 self.selectedRows = selectedRows
+                setEditing(true, animated: false)
             }
         }
+    }
+    override func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
+        setEditing(true, animated: false)
     }
     
     override func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
@@ -167,7 +172,5 @@ class ToDoTableViewController: UITableViewController, addViewControllerDelegate 
         let a = toDoList[indexPath.section].toDos[indexPath.row]
         print(a.title, a.todoDescription as Any)
     }
-    
-    
     
 }
