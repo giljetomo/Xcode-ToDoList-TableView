@@ -220,4 +220,12 @@ class ToDoTableViewController: UITableViewController, addViewControllerDelegate,
         navigationController?.pushViewController(editVC, animated: true)
     }
     
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        toDoList[indexPath.section].toDos.remove(at: indexPath.row)
+        tableView.reloadSections([indexPath.section], with: .automatic)
+    }
+    
+    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return true
+    }
 }
