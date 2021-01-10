@@ -19,8 +19,10 @@ struct ToDo: Equatable {
     var isCompleted: Bool
     
     static func == (lhs: ToDo, rhs: ToDo) -> Bool {
-        return lhs.title == rhs.title &&
-               lhs.todoDescription == rhs.todoDescription
+        return lhs.title.lowercased() == rhs.title.lowercased() &&
+               lhs.todoDescription?.lowercased() == rhs.todoDescription?.lowercased()
+        
+        //lowercased() accounts for invalidating new item to be added when there is a match
     }
 }
 

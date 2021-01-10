@@ -84,6 +84,7 @@ class AddViewController: UIViewController {
             loop: for group in groupList {
                 //unwrap the newTodo item then compare it with the toDo items and disable the button if there's a match
                 if let newTodo = newToDo {
+                    
                     if group.toDos.contains(newTodo) {
                         isEnabled = false
                         //if there's match, no need to read other group's list of toDo items
