@@ -70,6 +70,7 @@ class ToDoTableViewController: UITableViewController, addViewControllerDelegate 
         tableView.insertRows(at: [IndexPath(row: toDoList[1].toDos.count-1, section: 1)], with: .automatic)
         
         reloadNCBarButtonItems(toDoListIsEmpty)
+//        tableView.setEditing(true, animated: false)
     }
     
     @objc func deleteItem() {
