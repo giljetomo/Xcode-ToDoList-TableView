@@ -55,6 +55,7 @@ class AddViewController: UIViewController {
         setupLayout()
         
         newToDoItem.addTarget(self, action: #selector(textEditingChanged(_:)), for: .editingChanged)
+        newToDoItem.becomeFirstResponder()
         updateSaveButtonState()
     }
     
