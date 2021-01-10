@@ -49,7 +49,7 @@ class AddViewController: UIViewController {
         view.backgroundColor = .white
         navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(dismissVC))
         navigationItem.rightBarButtonItem = saveButton
-        title = "Add To Do Item"
+        title = "Add Todo Item"
         
         view.addSubview(mainView)
         setupLayout()

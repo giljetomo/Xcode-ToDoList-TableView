@@ -12,6 +12,7 @@ class ToDoTableViewController: UITableViewController, addViewControllerDelegate 
     let cellId = "ToDo"
     
     var selectedRows: [IndexPath]?
+    var toDoListIsEmpty: Bool!
     
     var toDoList: [Category] = [
         Category(group: .high, toDos: [ToDo(title: "House chore", todoDescription: "Wash the dishes", priority: .high, isCompleted: false)]),
@@ -19,7 +20,12 @@ class ToDoTableViewController: UITableViewController, addViewControllerDelegate 
         Category(group: .medium, toDos: [ToDo(title: "Exercise", todoDescription: "Walk", priority: .medium, isCompleted: true)]),
         
         Category(group: .low, toDos: [ToDo(title: "House chore", todoDescription: "Do the laundry", priority: .low, isCompleted: true), ToDo(title: "Grooming", todoDescription: "Get a haircut", priority: .low, isCompleted: true)])
-    ]
+    ] {
+        didSet {
+            toDoListIsEmpty = toDoList[0].toDos.isEmpty && toDoList[1].toDos.isEmpty && toDoList[2].toDos.isEmpty
+        }
+    }
+    
     var deleteButton: UIBarButtonItem!
     var addButton: UIBarButtonItem!
     
@@ -46,14 +52,29 @@ class ToDoTableViewController: UITableViewController, addViewControllerDelegate 
         //define the rightBarButtonItems depending on the conditions
         if (self.isEditing && tableView.indexPathsForSelectedRows != nil) {
             navigationItem.rightBarButtonItems = [addButton, deleteButton]
+        //    navigationItem.leftBarButtonItem = editButtonItem
         } else {
             navigationItem.rightBarButtonItems = [addButton]
+          //  navigationItem.leftBarButtonItem = nil
+        }
+    }
+    
+    func reloadNCBarButtonItems(_ ToDoListIsEmpty: Bool) {
+        if ToDoListIsEmpty {
+            navigationItem.leftBarButtonItem = nil
+            navigationItem.rightBarButtonItems = [addButton]
+        } else if tableView.isEditing && tableView.indexPathsForSelectedRows != nil {
+            navigationItem.rightBarButtonItems = [addButton, deleteButton]
+        } else {
+            navigationItem.leftBarButtonItem = editButtonItem
         }
     }
     
     func add(_ todo: ToDo) {
         toDoList[1].toDos.append(todo)
         tableView.insertRows(at: [IndexPath(row: toDoList[1].toDos.count-1, section: 1)], with: .automatic)
+        setEditing(false, animated: false)
+        reloadNCBarButtonItems(toDoListIsEmpty)
     }
     
     @objc func deleteItem() {
@@ -79,6 +100,10 @@ class ToDoTableViewController: UITableViewController, addViewControllerDelegate 
                 tableView.reloadSections([indexPath.section], with: .automatic)
             }
         }
+        
+        setEditing(true, animated: false)
+//        reloadNCBarButtonItems(toDoList[0].toDos.isEmpty && toDoList[1].toDos.isEmpty && toDoList[2].toDos.isEmpty)
+        reloadNCBarButtonItems(toDoListIsEmpty)
     }
     
     @objc func addItem() {
