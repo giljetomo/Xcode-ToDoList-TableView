@@ -7,11 +7,19 @@
 
 import UIKit
 
+protocol addViewControllerDelegate: class {
+    func add(_ todo: ToDo)
+}
+
 class AddViewController: UIViewController {
 
+    lazy var saveButton = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(saveItem))
+    weak var delegate: addViewControllerDelegate?
+
+    
     let mainView: UIView = {
         let view = UIView()
-        view.backgroundColor = .white
+//        view.backgroundColor = .cyan
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -21,6 +29,7 @@ class AddViewController: UIViewController {
         tf.borderStyle = .roundedRect
         tf.placeholder = "I need to..."
         tf.font = .systemFont(ofSize: 20)
+        tf.heightAnchor.constraint(equalToConstant: 45).isActive = true
         tf.translatesAutoresizingMaskIntoConstraints = false
         return tf
     }()
@@ -30,6 +39,7 @@ class AddViewController: UIViewController {
         tf.borderStyle = .roundedRect
         tf.placeholder = "Details"
         tf.font = .systemFont(ofSize: 18)
+        tf.heightAnchor.constraint(equalToConstant: 45).isActive = true
         tf.translatesAutoresizingMaskIntoConstraints = false
         return tf
     }()
@@ -38,11 +48,23 @@ class AddViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .white
         navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(dismissVC))
-        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(saveItem))
+        navigationItem.rightBarButtonItem = saveButton
         title = "Add To Do Item"
         
         view.addSubview(mainView)
         setupLayout()
+        
+        newToDoItem.addTarget(self, action: #selector(textEditingChanged(_:)), for: .editingChanged)
+        updateSaveButtonState()
+    }
+    
+    @objc func textEditingChanged(_ sender: UITextField) {
+        updateSaveButtonState()
+    }
+    
+    func updateSaveButtonState() {
+        let newToDoItemText = newToDoItem.text ?? ""
+        saveButton.isEnabled = !newToDoItemText.isEmpty
     }
     
     @objc func dismissVC() {
@@ -50,40 +72,28 @@ class AddViewController: UIViewController {
     }
     
     @objc func saveItem() {
-        
+        let newToDo = ToDo(title: newToDoItem.text!, todoDescription: newToDoItemDescription.text, priority: .medium, isCompleted: false)
+        delegate?.add(newToDo)
+        navigationController?.popToRootViewController(animated: true)
     }
     
     func setupLayout() {
-        mainView.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor).isActive = true
-        mainView.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor).isActive = true
-        mainView.widthAnchor.constraint(equalTo: view.safeAreaLayoutGuide.widthAnchor, multiplier: 1).isActive = true
         mainView.heightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.heightAnchor, multiplier: 1).isActive = true
         mainView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 0).isActive = true
-        
-        newToDoItem.heightAnchor.constraint(equalToConstant: 40).isActive = true
-        newToDoItem.widthAnchor.constraint(lessThanOrEqualToConstant: 600).isActive = true
-        newToDoItem.widthAnchor.constraint(greaterThanOrEqualToConstant: 400).isActive = true
-        
-        newToDoItemDescription.heightAnchor.constraint(equalToConstant: 40).isActive = true
-        newToDoItemDescription.widthAnchor.constraint(lessThanOrEqualToConstant: 600).isActive = true
-        newToDoItemDescription.widthAnchor.constraint(greaterThanOrEqualToConstant: 400).isActive = true
+        mainView.widthAnchor.constraint(equalTo: view.safeAreaLayoutGuide.widthAnchor, multiplier: 1).isActive = true
         
         let vStackView = UIStackView(arrangedSubviews: [newToDoItem, newToDoItemDescription])
         vStackView.translatesAutoresizingMaskIntoConstraints = false
-        vStackView.alignment = .center
-        vStackView.distribution = .equalSpacing
+        vStackView.alignment = .fill
+        vStackView.distribution = .fill
         vStackView.spacing = 8
         vStackView.axis = .vertical
-        
+
         mainView.addSubview(vStackView)
-        
-        vStackView.widthAnchor.constraint(lessThanOrEqualTo: mainView.widthAnchor, multiplier: 0.95).isActive = true
-        vStackView.widthAnchor.constraint(greaterThanOrEqualToConstant: 600).isActive = true
+
+        vStackView.widthAnchor.constraint(equalTo: mainView.widthAnchor, multiplier: 0.95).isActive = true
         vStackView.topAnchor.constraint(equalTo: mainView.topAnchor, constant: 10).isActive = true
         vStackView.centerXAnchor.constraint(equalTo: mainView.centerXAnchor).isActive = true
-    
-       
-
     }
 
 }

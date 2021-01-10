@@ -12,11 +12,15 @@ struct Category {
     var toDos: [ToDo]
 }
 
-struct ToDo {
+struct ToDo: Equatable {
     var title: String
     var todoDescription: String?
     var priority: Priority
     var isCompleted: Bool
+    
+    static func == (lhs: ToDo, rhs: ToDo) -> Bool {
+        return lhs.title == rhs.title
+    }
 }
 
 enum Priority: String {

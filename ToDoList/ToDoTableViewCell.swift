@@ -26,13 +26,6 @@ class ToDoTableViewCell: UITableViewCell {
         return lb
     }()
     
-//    let editButton: UIButton = {
-//        let eb = UIButton(type: .detailDisclosure)
-//        eb.constraintHeight(equalToConstant: 50)
-//        eb.translatesAutoresizingMaskIntoConstraints = false
-//        return eb
-//    }()
-    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
@@ -58,8 +51,8 @@ class ToDoTableViewCell: UITableViewCell {
     }
     
     func update(with todo: ToDo) {
-      titleLabel.text = todo.title
-      todoDescriptionLabel.text = todo.todoDescription
-      isCompletedLabel.text = todo.isCompleted ? "☑️" : ""
+        titleLabel.text = todo.title
+        todoDescriptionLabel.text = todo.todoDescription!.isEmpty ? " " : todo.todoDescription
+        isCompletedLabel.text = todo.isCompleted ? "☑️" : ""
     }
 }

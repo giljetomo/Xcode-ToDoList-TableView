@@ -7,9 +7,11 @@
 
 import UIKit
 
-class ToDoTableViewController: UITableViewController {
+class ToDoTableViewController: UITableViewController, addViewControllerDelegate {
     
     let cellId = "ToDo"
+    
+    var selectedRows: [IndexPath]?
     
     var toDoList: [Category] = [
         Category(group: .high, toDos: [ToDo(title: "House chore", todoDescription: "Wash the dishes", priority: .high, isCompleted: false)]),
@@ -34,13 +36,54 @@ class ToDoTableViewController: UITableViewController {
         navigationItem.leftBarButtonItem = editButtonItem
     }
     
+    func add(_ todo: ToDo) {
+        toDoList[1].toDos.append(todo)
+        tableView.insertRows(at: [IndexPath(row: toDoList[1].toDos.count-1, section: 1)], with: .automatic)
+    }
+    
     @objc func deleteItem() {
         
+        //read all selectedRows --> [IndexPath]
+        if let selectedRows = selectedRows {
+            
+            //create an array of tuple that will hold the toDo item and its respective IndexPath
+            var todoItems = [(IndexPath, ToDo)]()
+
+            //iterate through the selectedRows to get all the toDo items and their respective IndexPath
+            for indexPath in selectedRows {
+                todoItems.append((indexPath, toDoList[indexPath.section].toDos[indexPath.row]))
+            }
+            
+            //iterate through the array of toDoItem-and-IndexPath tuple
+            for element in todoItems {
+                //make an alias for IndexPath and toDoItem for each tuple for better readability (instead of processing by the tuple's index, ie. element.0-IndexPath, element.1-ToDo)
+                let (indexPath, toDoItem) = element
+                //remove the selected toDo item from the toDoList array/model
+                toDoList[indexPath.section].toDos = toDoList[indexPath.section].toDos.filter { $0 != toDoItem }
+                //reload the tableView on the specific section where the toDo item was previously located
+                tableView.reloadSections([indexPath.section], with: .automatic)
+            }
+
+//            for b in toDoList {
+//                for c in b.toDos {
+//                    print(c.todoDescription, c.priority)
+//                }
+//            }
+//            print("END")
+//
+        }
     }
     
     @objc func addItem() {
       let addVC = AddViewController()
+        addVC.delegate = self
         navigationController?.pushViewController(addVC, animated: true)
+//
+//        let addEditTVC = AddEditEmojiTableViewController(style: .grouped)
+//        addEditTVC.delegate = self
+//        addEditTVC.emoji = emojis[indexPath.row]
+//        let addEditNC = UINavigationController(rootViewController: addEditTVC)
+//        present(addEditNC, animated: true, completion: nil)
     }
     
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -85,15 +128,22 @@ class ToDoTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        guard tableView.isEditing == false else { return }
+//        guard tableView.isEditing == false else { return }
         
-        tableView.deselectRow(at: indexPath, animated: true)
-        
-        toDoList[indexPath.section].toDos[indexPath.row].isCompleted.toggle()
-        
-        print(toDoList[indexPath.section].toDos[indexPath.row].todoDescription!, toDoList[indexPath.section].toDos[indexPath.row].priority)
-        
-        tableView.reloadRows(at: [indexPath], with: .automatic)
+        if !tableView.isEditing {
+            tableView.deselectRow(at: indexPath, animated: true)
+            
+            toDoList[indexPath.section].toDos[indexPath.row].isCompleted.toggle()
+            
+            print(toDoList[indexPath.section].toDos[indexPath.row].todoDescription!, toDoList[indexPath.section].toDos[indexPath.row].priority)
+            
+            tableView.reloadRows(at: [indexPath], with: .automatic)
+        } else {
+            if let selectedRows = tableView.indexPathsForSelectedRows {
+                //get the [IndexPath] of all selected rows during edit mode
+                self.selectedRows = selectedRows
+            }
+        }
     }
     
     override func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
@@ -115,7 +165,9 @@ class ToDoTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
         let a = toDoList[indexPath.section].toDos[indexPath.row]
-        print(a.title, a.todoDescription)
+        print(a.title, a.todoDescription as Any)
     }
+    
+    
     
 }
