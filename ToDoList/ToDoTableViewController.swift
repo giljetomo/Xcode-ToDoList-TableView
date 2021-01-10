@@ -7,12 +7,13 @@
 
 import UIKit
 
-class ToDoTableViewController: UITableViewController, addViewControllerDelegate {
+class ToDoTableViewController: UITableViewController, addViewControllerDelegate, EditVCDelegate {
     
     let cellId = "ToDo"
     
     var selectedRows: [IndexPath]?
     var toDoListIsEmpty: Bool!
+    var itemForEditIndexPath: IndexPath?
     
     var toDoList: [Category] = [
         Category(group: .high, toDos: [ToDo(title: "House chore", todoDescription: "Wash the dishes", priority: .high, isCompleted: false)]),
@@ -70,7 +71,14 @@ class ToDoTableViewController: UITableViewController, addViewControllerDelegate 
         tableView.insertRows(at: [IndexPath(row: toDoList[1].toDos.count-1, section: 1)], with: .automatic)
         
         reloadNCBarButtonItems(toDoListIsEmpty)
-//        tableView.setEditing(true, animated: false)
+    }
+    
+    func edit(_ toDo: ToDo) {
+        if let indexPath = itemForEditIndexPath {
+            toDoList[indexPath.section].toDos.remove(at: indexPath.row)
+            toDoList[indexPath.section].toDos.insert(toDo, at: indexPath.row)
+            tableView.reloadRows(at: [indexPath], with: .automatic)
+        }
     }
     
     @objc func deleteItem() {
@@ -106,6 +114,7 @@ class ToDoTableViewController: UITableViewController, addViewControllerDelegate 
         addVC.delegate = self
         navigationController?.pushViewController(addVC, animated: true)
     }
+    
     
     override func numberOfSections(in tableView: UITableView) -> Int {
         return toDoList.count
@@ -198,8 +207,14 @@ class ToDoTableViewController: UITableViewController, addViewControllerDelegate 
     }
     
     override func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
-        let a = toDoList[indexPath.section].toDos[indexPath.row]
-        print(a.title, a.todoDescription as Any)
+        let toDoItem = toDoList[indexPath.section].toDos[indexPath.row]
+//        print(a.title, a.todoDescription as Any)
+        
+        itemForEditIndexPath = indexPath
+        let editVC = EditViewController()
+        editVC.toDo = toDoItem
+        editVC.delegate = self
+        navigationController?.pushViewController(editVC, animated: true)
     }
     
 }

@@ -17,6 +17,7 @@
 		526B349125A8D93500BAE8D9 /* ToDoTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 526B349025A8D93500BAE8D9 /* ToDoTableViewController.swift */; };
 		526B34AD25A8E00400BAE8D9 /* UIView+ConstraintLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 526B34AC25A8E00400BAE8D9 /* UIView+ConstraintLayout.swift */; };
 		526B34BA25AA27D000BAE8D9 /* AddViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 526B34B925AA27D000BAE8D9 /* AddViewController.swift */; };
+		526B34BD25AB6FD600BAE8D9 /* EditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 526B34BC25AB6FD600BAE8D9 /* EditViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,6 +33,7 @@
 		526B349025A8D93500BAE8D9 /* ToDoTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoTableViewController.swift; sourceTree = "<group>"; };
 		526B34AC25A8E00400BAE8D9 /* UIView+ConstraintLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+ConstraintLayout.swift"; sourceTree = "<group>"; };
 		526B34B925AA27D000BAE8D9 /* AddViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddViewController.swift; sourceTree = "<group>"; };
+		526B34BC25AB6FD600BAE8D9 /* EditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -75,6 +77,7 @@
 				526B348C25A8D89700BAE8D9 /* ToDoTableViewCell.swift */,
 				526B349025A8D93500BAE8D9 /* ToDoTableViewController.swift */,
 				526B34B925AA27D000BAE8D9 /* AddViewController.swift */,
+				526B34BC25AB6FD600BAE8D9 /* EditViewController.swift */,
 			);
 			path = ToDoList;
 			sourceTree = "<group>";
@@ -149,6 +152,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				526B34BD25AB6FD600BAE8D9 /* EditViewController.swift in Sources */,
 				526B347525A8D86500BAE8D9 /* AppDelegate.swift in Sources */,
 				526B347725A8D86500BAE8D9 /* SceneDelegate.swift in Sources */,
 				526B34BA25AA27D000BAE8D9 /* AddViewController.swift in Sources */,
