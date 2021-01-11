@@ -21,8 +21,7 @@ struct ToDo: Equatable {
     static func == (lhs: ToDo, rhs: ToDo) -> Bool {
         return lhs.title.lowercased() == rhs.title.lowercased() &&
                lhs.todoDescription?.lowercased() == rhs.todoDescription?.lowercased()
-        
-        //lowercased() accounts for invalidating new item to be added when there is a match
+        //lowercased() invalidates new item to be added when there is a match
     }
 }
 

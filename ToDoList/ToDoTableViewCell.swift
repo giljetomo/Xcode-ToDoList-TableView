@@ -35,7 +35,6 @@ class ToDoTableViewCell: UITableViewCell {
         vStackView.distribution = .fill
         vStackView.spacing = 0
         
-        
         let hStackView = UIStackView(arrangedSubviews: [isCompletedLabel, vStackView])
         hStackView.axis = .horizontal
         hStackView.alignment = .fill

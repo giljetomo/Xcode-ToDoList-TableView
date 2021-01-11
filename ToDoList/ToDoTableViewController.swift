@@ -50,8 +50,8 @@ class ToDoTableViewController: UITableViewController, addViewControllerDelegate,
         //this is the default setting in order to enter editing mode
         super.setEditing(editing, animated: animated)
         
-        if let a = toDoListIsEmpty, a == true {
-            reloadNCBarButtonItems(isListEmpty: a)
+        if let _ = toDoListIsEmpty {
+            reloadNCBarButtonItems(isListEmpty: toDoListIsEmpty)
         } else {
             reloadNCBarButtonItems()
         }
@@ -200,6 +200,12 @@ class ToDoTableViewController: UITableViewController, addViewControllerDelegate,
     
     override func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
         
+        //if any item is currently selected and has been moved, its respective IndexPath will be collected
+        if let selectedRows = tableView.indexPathsForSelectedRows {
+            //get the [IndexPath] of all selected rows during edit mode
+            self.selectedRows = selectedRows
+            print(selectedRows)
+        }
         //get and remove the selected todo item from the list (model)
         var selected = toDoList[sourceIndexPath.section].toDos.remove(at: sourceIndexPath.row)
     
