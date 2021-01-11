@@ -11,8 +11,13 @@ class ToDoTableViewController: UITableViewController, addViewControllerDelegate,
     
     let cellId = "ToDo"
     
+    //for storing the selected toDo item/s
     var selectedRows: [IndexPath]?
+    
+    //for observing toDoList contents
     var toDoListIsEmpty: Bool!
+    
+    //for storing the selected toDo item when detailDisclosureButton in a cell is selected
     var itemForEditIndexPath: IndexPath?
     
     var toDoList: [Category] = [
@@ -27,14 +32,17 @@ class ToDoTableViewController: UITableViewController, addViewControllerDelegate,
             toDoListIsEmpty = toDoList[0].toDos.isEmpty && toDoList[1].toDos.isEmpty && toDoList[2].toDos.isEmpty
         }
     }
-    
+    //Navigation Controller's right rightBarButtonItems
     var deleteButton: UIBarButtonItem!
     var addButton: UIBarButtonItem!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        //optional but implemented to customize the tableView's style to insetGrouped
         self.tableView = UITableView(frame: self.tableView.frame, style: .insetGrouped)
+        //allows multiple selection during edit mode
         tableView.allowsMultipleSelectionDuringEditing = true
+        //register custom ToDoTableViewCell
         tableView.register(ToDoTableViewCell.self, forCellReuseIdentifier: cellId)
         
         //Navigation Controller properties
@@ -55,7 +63,6 @@ class ToDoTableViewController: UITableViewController, addViewControllerDelegate,
         } else {
             reloadNCBarButtonItems()
         }
-    
     }
     
     func reloadNCBarButtonItems(isListEmpty ToDoListIsEmpty: Bool) {
@@ -139,6 +146,7 @@ class ToDoTableViewController: UITableViewController, addViewControllerDelegate,
         return 40
     }
     
+    //customizes the section headers
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         
         let myLabel = UILabel()
