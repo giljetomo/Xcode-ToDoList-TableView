@@ -42,16 +42,20 @@ class ToDoTableViewController: UITableViewController, addViewControllerDelegate,
         navigationController?.navigationBar.prefersLargeTitles = true
         addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addItem))
         deleteButton = UIBarButtonItem(title: "Delete", style: .plain, target: self, action: #selector(deleteItem))
-        navigationItem.leftBarButtonItem = editButtonItem
         
-       // setEditing(false, animated: false)
         reloadNCBarButtonItems(isListEmpty: false)
     }
     
     override func setEditing(_ editing: Bool, animated: Bool) {
         //this is the default setting in order to enter editing mode
         super.setEditing(editing, animated: animated)
-        reloadNCBarButtonItems(isListEmpty: false)
+        
+        if let a = toDoListIsEmpty, a == true {
+            reloadNCBarButtonItems(isListEmpty: a)
+        } else {
+            reloadNCBarButtonItems()
+        }
+    
     }
     
     func reloadNCBarButtonItems(isListEmpty ToDoListIsEmpty: Bool) {
@@ -64,6 +68,11 @@ class ToDoTableViewController: UITableViewController, addViewControllerDelegate,
             navigationItem.leftBarButtonItem = editButtonItem
             navigationItem.rightBarButtonItems = [addButton]
         }
+    }
+    
+    func reloadNCBarButtonItems() {
+        navigationItem.rightBarButtonItems = [addButton, deleteButton]
+        navigationItem.leftBarButtonItem = editButtonItem
     }
     
     func add(_ todo: ToDo) {
@@ -97,7 +106,7 @@ class ToDoTableViewController: UITableViewController, addViewControllerDelegate,
             
             //iterate through the array of toDoItem-and-IndexPath tuple
             for element in todoItems {
-                //make an alias for IndexPath and toDoItem for each tuple for better readability (instead of processing by the tuple's index, ie. element.0-IndexPath, element.1-ToDo)
+                //make an alias for IndexPath and toDoItem for each tuple for better readability (instead of processing by the tuple's index, ie. element.0 = IndexPath, element.1 = ToDo)
                 let (indexPath, toDoItem) = element
                 //remove the selected toDo item from the toDoList array/model
                 toDoList[indexPath.section].toDos = toDoList[indexPath.section].toDos.filter { $0 != toDoItem }
@@ -160,16 +169,14 @@ class ToDoTableViewController: UITableViewController, addViewControllerDelegate,
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-//        guard tableView.isEditing == false else { return }
-        
         if !tableView.isEditing {
-            tableView.deselectRow(at: indexPath, animated: true)
+            tableView.deselectRow(at: indexPath, animated: false)
             
             toDoList[indexPath.section].toDos[indexPath.row].isCompleted.toggle()
             
-            print(toDoList[indexPath.section].toDos[indexPath.row].todoDescription!, toDoList[indexPath.section].toDos[indexPath.row].priority)
+            print(toDoList[indexPath.section].toDos[indexPath.row].priority.rawValue.trimmingCharacters(in: CharacterSet(charactersIn: " Priority")).uppercased(), toDoList[indexPath.section].toDos[indexPath.row].title, toDoList[indexPath.section].toDos[indexPath.row].todoDescription!)
             
-            tableView.reloadRows(at: [indexPath], with: .automatic)
+            tableView.reloadRows(at: [indexPath], with: .none)
         } else {
             if let selectedRows = tableView.indexPathsForSelectedRows {
                 //get the [IndexPath] of all selected rows during edit mode
@@ -203,15 +210,13 @@ class ToDoTableViewController: UITableViewController, addViewControllerDelegate,
             case 2 : selected.priority = .low
             default: fatalError()
         }
-    
         //insert the modified todo item to the destination to update the 'model'
         toDoList[destinationIndexPath.section].toDos.insert(selected, at: destinationIndexPath.row)
     }
     
     override func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
         let toDoItem = toDoList[indexPath.section].toDos[indexPath.row]
-//        print(a.title, a.todoDescription as Any)
-        
+//        print(toDoItem)
         itemForEditIndexPath = indexPath
         let editVC = EditViewController()
         editVC.toDo = toDoItem
@@ -222,7 +227,7 @@ class ToDoTableViewController: UITableViewController, addViewControllerDelegate,
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         toDoList[indexPath.section].toDos.remove(at: indexPath.row)
-        tableView.reloadSections([indexPath.section], with: .automatic)
+        tableView.deleteRows(at: [indexPath], with: .automatic)
     }
     
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {

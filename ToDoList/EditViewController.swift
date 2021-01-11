@@ -12,9 +12,11 @@ protocol EditVCDelegate: class {
 }
 
 class EditViewController: UIViewController {
-
-    var toDo: ToDo?
-    var delegate: EditVCDelegate?
+    //this UIViewController will delegate the edit task to ToDoTableViewController
+    weak var delegate: EditVCDelegate?
+    //this will hold the current toDo item being edited
+    var toDo: ToDo!
+    //this list will hold all existing toDo items once this UIViewController has been created from ToDoTableViewController
     var toDoList: [Category]?
     
     let saveButton = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(saveItem))

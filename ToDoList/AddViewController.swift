@@ -13,7 +13,7 @@ protocol addViewControllerDelegate: class {
 
 class AddViewController: UIViewController {
 
-    lazy var saveButton = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(saveItem))
+    let saveButton = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(saveItem))
     weak var delegate: addViewControllerDelegate?
     
     //this list will be populated with all existing toDo items once this UIViewController has been created from ToDoTableViewController
