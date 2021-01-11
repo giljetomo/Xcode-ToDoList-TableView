@@ -83,7 +83,6 @@ class ToDoTableViewController: UITableViewController, addViewControllerDelegate,
     }
     
     func add(_ todo: ToDo) {
-        
         toDoList[1].toDos.append(todo)
         tableView.insertRows(at: [IndexPath(row: toDoList[1].toDos.count-1, section: 1)], with: .automatic)
 
@@ -98,34 +97,6 @@ class ToDoTableViewController: UITableViewController, addViewControllerDelegate,
         }
     }
     
-    @objc func deleteItem() {
-        
-        //read all selectedRows --> [IndexPath]
-        if let selectedRows = selectedRows {
-            
-            //create an array of tuple that will hold the toDo item and its respective IndexPath
-            var todoItems = [(IndexPath, ToDo)]()
-
-            //iterate through the selectedRows to get all the toDo items and their respective IndexPath
-            for indexPath in selectedRows {
-                todoItems.append((indexPath, toDoList[indexPath.section].toDos[indexPath.row]))
-            }
-            
-            //iterate through the array of toDoItem-and-IndexPath tuple
-            for element in todoItems {
-                //make an alias for IndexPath and toDoItem for each tuple for better readability (instead of processing by the tuple's index, ie. element.0 = IndexPath, element.1 = ToDo)
-                let (indexPath, toDoItem) = element
-                //remove the selected toDo item from the toDoList array/model
-                toDoList[indexPath.section].toDos = toDoList[indexPath.section].toDos.filter { $0 != toDoItem }
-                //reload the tableView on the specific section where the toDo item was previously located
-                tableView.reloadSections([indexPath.section], with: .automatic)
-            }
-        }
-        
-       // setEditing(true, animated: false)
-        reloadNCBarButtonItems(isListEmpty: toDoListIsEmpty)
-    }
-    
     @objc func addItem() {
       let addVC = AddViewController()
         addVC.toDoList = toDoList
@@ -133,6 +104,44 @@ class ToDoTableViewController: UITableViewController, addViewControllerDelegate,
         navigationController?.pushViewController(addVC, animated: true)
     }
     
+    @objc func deleteItem() {
+        
+        //read all selectedRows --> [IndexPath]
+        if let selectedRows = selectedRows {
+            
+            //create an empty array of tuple that will hold the toDo item and its respective IndexPath
+            var todoItems = [(IndexPath, ToDo)]()
+
+            //iterate through the selectedRows to get all the toDo items and their respective IndexPath
+            for indexPath in selectedRows {
+                //insert the selected toDo items on their respective group/section (based on priority) into todoItems tuple-array
+                todoItems.append((indexPath, toDoList[indexPath.section].toDos[indexPath.row]))
+            }
+            
+            //iterate through the then-populated array of toDoItem-and-IndexPath tuple and read each toDo item to be deleted
+            for element in todoItems {
+                //make an alias for the IndexPath and toDoItem on each tuple for better readability (instead of processing by the tuple's index, ie. element.0 = IndexPath, element.1 = ToDo)
+                let (indexPath, toDoItem) = element
+                //update the toDoList array/model by removing the selected toDo item
+                toDoList[indexPath.section].toDos = toDoList[indexPath.section].toDos.filter { $0 != toDoItem }
+                //reload the tableView on the specific section where the toDo item was previously located
+                tableView.reloadSections([indexPath.section], with: .automatic)
+                
+//                tableView.insertRows(at: [IndexPath(row: toDoList[1].toDos.count-1, section: 1)], with: .automatic)
+//                while let a = tableView.indexPathsForSelectedRows, !a.isEmpty {
+//                    print(a)
+//                    for indexPath in stride(from: a.count-1, through: 0, by: -1) {
+//                        print(indexPath)
+//                        tableView.deleteRows(at: [a[indexPath]], with: .automatic)
+//                        tableView.reloadSections([a[indexPath].section], with: .automatic)
+//                        break
+//                    }
+//                }
+            }
+        }
+
+        reloadNCBarButtonItems(isListEmpty: toDoListIsEmpty)
+    }
     
     override func numberOfSections(in tableView: UITableView) -> Int {
         return toDoList.count
@@ -150,7 +159,7 @@ class ToDoTableViewController: UITableViewController, addViewControllerDelegate,
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         
         let myLabel = UILabel()
-        myLabel.frame = CGRect(x: 0, y: 0, width: 320, height: 30)
+        myLabel.frame = CGRect(x: .zero, y: .zero, width: tableView.frame.width, height: 30)
         myLabel.font = UIFont.boldSystemFont(ofSize: 22)
         myLabel.text = self.tableView(tableView, titleForHeaderInSection: section)
 
@@ -178,13 +187,12 @@ class ToDoTableViewController: UITableViewController, addViewControllerDelegate,
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         if !tableView.isEditing {
-            tableView.deselectRow(at: indexPath, animated: false)
-            
+            //flip the isCompleted property of the selected toDo item
             toDoList[indexPath.section].toDos[indexPath.row].isCompleted.toggle()
             
             print(toDoList[indexPath.section].toDos[indexPath.row].priority.rawValue.trimmingCharacters(in: CharacterSet(charactersIn: " Priority")).uppercased(), toDoList[indexPath.section].toDos[indexPath.row].title, toDoList[indexPath.section].toDos[indexPath.row].todoDescription!)
-            
-            tableView.reloadRows(at: [indexPath], with: .none)
+            //reload the cell of selected toDo item to reflect its updated isCompleted property
+            tableView.reloadRows(at: [indexPath], with: .fade)
         } else {
             if let selectedRows = tableView.indexPathsForSelectedRows {
                 //get the [IndexPath] of all selected rows during edit mode
@@ -201,8 +209,7 @@ class ToDoTableViewController: UITableViewController, addViewControllerDelegate,
             //get the [IndexPath] of all selected rows during edit mode
             self.selectedRows = selectedRows
         }
-        
-        // setEditing(true, animated: false)
+
         reloadNCBarButtonItems(isListEmpty: false)
     }
     
@@ -229,21 +236,29 @@ class ToDoTableViewController: UITableViewController, addViewControllerDelegate,
     }
     
     override func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
+        //get the selected toDo item when the cell's accessory button is tapped for editing
         let toDoItem = toDoList[indexPath.section].toDos[indexPath.row]
-//        print(toDoItem)
+        //get the toDo item's indexPath to be used later for saving the updated toDo item in its proper location
         itemForEditIndexPath = indexPath
+        
         let editVC = EditViewController()
+        //pass the selected toDo item to EditViewController
         editVC.toDo = toDoItem
+        //pass the toDo list to EditViewController
         editVC.toDoList = toDoList
+        //assign ToDoTableViewController to be EditViewController's delegate
         editVC.delegate = self
+        
         navigationController?.pushViewController(editVC, animated: true)
     }
     
+    //function needed to enable swipe delete
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         toDoList[indexPath.section].toDos.remove(at: indexPath.row)
         tableView.deleteRows(at: [indexPath], with: .automatic)
     }
     
+    //function needed to enable swipe delete
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         return true
     }
