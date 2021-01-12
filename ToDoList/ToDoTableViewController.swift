@@ -7,7 +7,7 @@
 
 import UIKit
 
-class ToDoTableViewController: UITableViewController, addViewControllerDelegate, EditVCDelegate {
+class ToDoTableViewController: UITableViewController, addViewControllerDelegate, EditVCDelegate, addEditViewControllerDelegate {
     
     let cellId = "ToDo"
     
@@ -48,7 +48,7 @@ class ToDoTableViewController: UITableViewController, addViewControllerDelegate,
         //Navigation Controller properties
         title = "Todo Items"
         navigationController?.navigationBar.prefersLargeTitles = true
-        addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addItem))        
+        addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addItem))
         deleteButton = UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(deleteItem))
         
         reloadNCBarButtonItems(isListEmpty: false)
@@ -98,9 +98,14 @@ class ToDoTableViewController: UITableViewController, addViewControllerDelegate,
     }
     
     @objc func addItem() {
-      let addVC = AddViewController()
+//      let addVC = AddViewController()
+//        addVC.toDoList = toDoList
+//        addVC.delegate = self
+//        navigationController?.pushViewController(addVC, animated: true)
+        let addVC = AddEditViewController()
+        addVC.addEditDelegate = self
         addVC.toDoList = toDoList
-        addVC.delegate = self
+        
         navigationController?.pushViewController(addVC, animated: true)
     }
     
@@ -241,13 +246,20 @@ class ToDoTableViewController: UITableViewController, addViewControllerDelegate,
         //get the toDo item's indexPath to be used later for saving the updated toDo item in its proper location
         itemForEditIndexPath = indexPath
         
-        let editVC = EditViewController()
-        //pass the selected toDo item to EditViewController
+//        let editVC = EditViewController()
+//        //pass the selected toDo item to EditViewController
+//        editVC.toDo = toDoItem
+//        //pass the toDo list to EditViewController
+//        editVC.toDoList = toDoList
+//        //assign ToDoTableViewController to be EditViewController's delegate
+//        editVC.delegate = self
+//        navigationController?.pushViewController(editVC, animated: true)
+        
+        let editVC = AddEditViewController()
         editVC.toDo = toDoItem
-        //pass the toDo list to EditViewController
         editVC.toDoList = toDoList
-        //assign ToDoTableViewController to be EditViewController's delegate
-        editVC.delegate = self
+        editVC.inEditMode = true
+        editVC.addEditDelegate = self
         
         navigationController?.pushViewController(editVC, animated: true)
     }
