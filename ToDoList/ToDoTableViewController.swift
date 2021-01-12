@@ -48,8 +48,8 @@ class ToDoTableViewController: UITableViewController, addViewControllerDelegate,
         //Navigation Controller properties
         title = "Todo Items"
         navigationController?.navigationBar.prefersLargeTitles = true
-        addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addItem))
-        deleteButton = UIBarButtonItem(title: "Delete", style: .plain, target: self, action: #selector(deleteItem))
+        addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addItem))        
+        deleteButton = UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(deleteItem))
         
         reloadNCBarButtonItems(isListEmpty: false)
     }
