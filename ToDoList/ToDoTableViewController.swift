@@ -7,7 +7,7 @@
 
 import UIKit
 
-class ToDoTableViewController: UITableViewController, addViewControllerDelegate, EditVCDelegate, addEditViewControllerDelegate {
+class ToDoTableViewController: UITableViewController, addEditViewControllerDelegate {
     
     let cellId = "ToDo"
     
@@ -98,10 +98,6 @@ class ToDoTableViewController: UITableViewController, addViewControllerDelegate,
     }
     
     @objc func addItem() {
-//      let addVC = AddViewController()
-//        addVC.toDoList = toDoList
-//        addVC.delegate = self
-//        navigationController?.pushViewController(addVC, animated: true)
         let addVC = AddEditViewController()
         addVC.addEditDelegate = self
         addVC.toDoList = toDoList
@@ -109,6 +105,21 @@ class ToDoTableViewController: UITableViewController, addViewControllerDelegate,
         navigationController?.pushViewController(addVC, animated: true)
     }
     
+    override func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
+        //get the selected toDo item when the cell's accessory button is tapped for editing
+        let toDoItem = toDoList[indexPath.section].toDos[indexPath.row]
+        //get the toDo item's indexPath to be used later for saving the updated toDo item in its proper location
+        itemForEditIndexPath = indexPath
+
+        let editVC = AddEditViewController()
+        editVC.toDo = toDoItem
+        editVC.toDoList = toDoList
+        editVC.inEditMode = true
+        editVC.addEditDelegate = self
+        
+        navigationController?.pushViewController(editVC, animated: true)
+    }
+   
     @objc func deleteItem() {
         
         //read all selectedRows --> [IndexPath]
@@ -131,20 +142,8 @@ class ToDoTableViewController: UITableViewController, addViewControllerDelegate,
                 toDoList[indexPath.section].toDos = toDoList[indexPath.section].toDos.filter { $0 != toDoItem }
                 //reload the tableView on the specific section where the toDo item was previously located
                 tableView.reloadSections([indexPath.section], with: .automatic)
-                
-//                tableView.insertRows(at: [IndexPath(row: toDoList[1].toDos.count-1, section: 1)], with: .automatic)
-//                while let a = tableView.indexPathsForSelectedRows, !a.isEmpty {
-//                    print(a)
-//                    for indexPath in stride(from: a.count-1, through: 0, by: -1) {
-//                        print(indexPath)
-//                        tableView.deleteRows(at: [a[indexPath]], with: .automatic)
-//                        tableView.reloadSections([a[indexPath].section], with: .automatic)
-//                        break
-//                    }
-//                }
             }
         }
-
         reloadNCBarButtonItems(isListEmpty: toDoListIsEmpty)
     }
     
@@ -238,30 +237,6 @@ class ToDoTableViewController: UITableViewController, addViewControllerDelegate,
         }
         //insert the modified todo item to the destination to update the 'model'
         toDoList[destinationIndexPath.section].toDos.insert(selected, at: destinationIndexPath.row)
-    }
-    
-    override func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
-        //get the selected toDo item when the cell's accessory button is tapped for editing
-        let toDoItem = toDoList[indexPath.section].toDos[indexPath.row]
-        //get the toDo item's indexPath to be used later for saving the updated toDo item in its proper location
-        itemForEditIndexPath = indexPath
-        
-//        let editVC = EditViewController()
-//        //pass the selected toDo item to EditViewController
-//        editVC.toDo = toDoItem
-//        //pass the toDo list to EditViewController
-//        editVC.toDoList = toDoList
-//        //assign ToDoTableViewController to be EditViewController's delegate
-//        editVC.delegate = self
-//        navigationController?.pushViewController(editVC, animated: true)
-        
-        let editVC = AddEditViewController()
-        editVC.toDo = toDoItem
-        editVC.toDoList = toDoList
-        editVC.inEditMode = true
-        editVC.addEditDelegate = self
-        
-        navigationController?.pushViewController(editVC, animated: true)
     }
     
     //function needed to enable swipe delete
