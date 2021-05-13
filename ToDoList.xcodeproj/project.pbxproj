@@ -64,6 +64,10 @@
 		526B347325A8D86500BAE8D9 /* ToDoList */ = {
 			isa = PBXGroup;
 			children = (
+				526B348925A8D87900BAE8D9 /* ToDo.swift */,
+				526B348C25A8D89700BAE8D9 /* ToDoTableViewCell.swift */,
+				526B349025A8D93500BAE8D9 /* ToDoTableViewController.swift */,
+				526B34BF25AD72F600BAE8D9 /* AddEditViewController.swift */,
 				526B347425A8D86500BAE8D9 /* AppDelegate.swift */,
 				526B347625A8D86500BAE8D9 /* SceneDelegate.swift */,
 				526B347A25A8D86500BAE8D9 /* Main.storyboard */,
@@ -71,10 +75,6 @@
 				526B34AC25A8E00400BAE8D9 /* UIView+ConstraintLayout.swift */,
 				526B347F25A8D86600BAE8D9 /* LaunchScreen.storyboard */,
 				526B348225A8D86600BAE8D9 /* Info.plist */,
-				526B348925A8D87900BAE8D9 /* ToDo.swift */,
-				526B348C25A8D89700BAE8D9 /* ToDoTableViewCell.swift */,
-				526B349025A8D93500BAE8D9 /* ToDoTableViewController.swift */,
-				526B34BF25AD72F600BAE8D9 /* AddEditViewController.swift */,
 			);
 			path = ToDoList;
 			sourceTree = "<group>";
